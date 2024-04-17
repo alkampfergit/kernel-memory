@@ -16,7 +16,7 @@ public class DefaultTests : BaseFunctionalTestCase
     {
         Assert.False(string.IsNullOrEmpty(this.OpenAiConfig.APIKey));
 
-        this._elasticsearchConfig = cfg.GetSection("Services:Elasticsearch").Get<KernelMemoryElasticSearchConfig>()!;
+        this._elasticsearchConfig = cfg.GetSection("KernelMemory:Services:Elasticsearch").Get<KernelMemoryElasticSearchConfig>()!;
 
         this._memory = new KernelMemoryBuilder()
             .With(new KernelMemoryConfig { DefaultIndexName = "default4tests" })
@@ -105,6 +105,3 @@ public class DefaultTests : BaseFunctionalTestCase
         await DocumentUploadTest.ItSupportsTags(this._memory, this.Log);
     }
 }
-
-#endif
-
