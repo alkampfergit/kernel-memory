@@ -1,13 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-// When using KernelMemoryDev there are two references to Abstractions (project + package)
-// because the Elasticsearch extension is available only as a package, which includes a reference to Abstraction package.
-// As a result, the compiler is unable to see either the Abstractions, with a build error, so we allow these
-// tests only when working with packages.
-
-#if !KernelMemoryDev
-using FreeMindLabs.KernelMemory.Elasticsearch;
 using FunctionalTests.DefaultTestCases;
+using KernelMemory.ElasticSearch;
 using Microsoft.KernelMemory;
 using Microsoft.TestHelpers;
 
@@ -16,13 +10,13 @@ namespace Elasticsearch.FunctionalTests;
 public class DefaultTests : BaseFunctionalTestCase
 {
     private readonly MemoryServerless _memory;
-    private readonly ElasticsearchConfig _elasticsearchConfig;
+    private readonly KernelMemoryElasticSearchConfig _elasticsearchConfig;
 
     public DefaultTests(IConfiguration cfg, ITestOutputHelper output) : base(cfg, output)
     {
         Assert.False(string.IsNullOrEmpty(this.OpenAiConfig.APIKey));
 
-        this._elasticsearchConfig = cfg.GetSection("KernelMemory:Services:Elasticsearch").Get<ElasticsearchConfig>()!;
+        this._elasticsearchConfig = cfg.GetSection("Services:Elasticsearch").Get<KernelMemoryElasticSearchConfig>()!;
 
         this._memory = new KernelMemoryBuilder()
             .With(new KernelMemoryConfig { DefaultIndexName = "default4tests" })
@@ -30,7 +24,7 @@ public class DefaultTests : BaseFunctionalTestCase
             .WithOpenAI(this.OpenAiConfig)
             // .WithAzureOpenAITextGeneration(this.AzureOpenAITextConfiguration)
             // .WithAzureOpenAITextEmbeddingGeneration(this.AzureOpenAIEmbeddingConfiguration)
-            .WithElasticsearch(this._elasticsearchConfig)
+            .WithElasticSearch(this._elasticsearchConfig)
             .Build<MemoryServerless>();
     }
 
